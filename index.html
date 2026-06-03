@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FallHarmony · operational cockpit for the AI Native Solutions estate · env-first debug · session hygiene · the 7 lessons">
+<title>FallHarmony · ◊·κ=1</title>
+<link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"FallHarmony","short_name":"FallHarmony","start_url":".","display":"standalone","background_color":"%230b0a0f","theme_color":"%238b1a1a","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%238b1a1a%27/%3E%3Ctext x=%2750%27 y=%2767%27 text-anchor=%27middle%27 font-size=%2756%27 fill=%27%23d4a853%27 font-family=%27serif%27%3E◊%3C/text%3E%3C/svg%3E","sizes":"any","type":"image/svg+xml"}]}'>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ox:#8b1a1a;--brass:#b8974a;--cream:#c4bfb2;--void:#0b0a0f;--gold:#d4a853;--ox-deep:#5a0e0e;--void-2:#161318;--void-3:#1f1a22;--ok:#4a7c4a;--amber:#b8974a;--red:#a83232}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--void);color:var(--cream);font-family:'DM Sans',sans-serif;min-height:100vh;line-height:1.5}
+body{background-image:radial-gradient(circle at 20% 30%,rgba(139,26,26,0.08) 0%,transparent 50%),radial-gradient(circle at 80% 70%,rgba(184,151,74,0.05) 0%,transparent 50%)}
+a{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--brass)}
+a:hover{color:var(--brass)}
+h1,h2,h3{font-family:'Libre Baskerville',serif;color:var(--cream);font-weight:400;line-height:1.2}
+.mono{font-family:'IBM Plex Mono',monospace}
+.container{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
+header{padding:30px 0 20px;border-bottom:1px solid var(--ox-deep);margin-bottom:24px}
+header .brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+header h1{font-size:2rem;color:var(--ox)}
+header .glyph{color:var(--gold);font-size:1.5rem}
+header .tag{color:var(--brass);font-size:0.85rem;letter-spacing:0.1em;text-transform:uppercase;font-family:'IBM Plex Mono',monospace}
+header .sub{margin-top:8px;color:var(--cream);opacity:0.7;font-size:0.95rem}
+section{margin-bottom:24px;background:var(--void-2);border:1px solid var(--ox-deep);border-radius:4px;padding:20px}
+section h2{font-size:1.15rem;color:var(--brass);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+section h2 .num{color:var(--ox);font-family:'IBM Plex Mono',monospace;font-size:0.85rem}
+section p.intro{color:var(--cream);opacity:0.75;font-size:0.9rem;margin-bottom:14px}
+textarea,input,select{width:100%;background:var(--void);color:var(--cream);border:1px solid var(--ox-deep);border-radius:3px;padding:11px;font-family:'IBM Plex Mono',monospace;font-size:0.88rem}
+textarea{min-height:140px;resize:vertical;line-height:1.5}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--brass)}
+button{background:var(--ox);color:var(--cream);border:none;padding:10px 18px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;border-radius:3px;cursor:pointer;transition:all 0.15s;letter-spacing:0.02em}
+button:hover{background:var(--ox-deep);color:var(--gold)}
+button.ghost{background:transparent;color:var(--brass);border:1px solid var(--brass)}
+button.ghost:hover{background:var(--ox-deep);color:var(--gold);border-color:var(--gold)}
+button.small{padding:6px 12px;font-size:0.82rem}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.snippet{background:var(--void);border:1px solid var(--ox-deep);border-radius:3px;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;color:var(--cream);overflow-x:auto;white-space:pre;margin-bottom:10px;position:relative}
+.snippet button.copy{position:absolute;top:6px;right:6px;padding:4px 10px;font-size:0.72rem;background:var(--void-3);color:var(--brass);border:1px solid var(--brass)}
+.snippet button.copy:hover{color:var(--gold);border-color:var(--gold)}
+.status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.status{background:var(--void-3);border:1px solid var(--ox-deep);border-left:3px solid var(--brass);border-radius:3px;padding:14px}
+.status.ok{border-left-color:var(--ok)}
+.status.amber{border-left-color:var(--amber)}
+.status.red{border-left-color:var(--red)}
+.status h3{font-size:0.78rem;color:var(--brass);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;font-family:'IBM Plex Mono',monospace}
+.status .val{font-family:'Libre Baskerville',serif;color:var(--cream);font-size:1.05rem;margin-bottom:4px}
+.status .det{font-size:0.78rem;color:var(--cream);opacity:0.65;font-family:'IBM Plex Mono',monospace;line-height:1.4}
+.status.red .val{color:var(--red)}
+.status.amber .val{color:var(--amber)}
+.status.ok .val{color:var(--ok)}
+.classify{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px}
+.classify label{background:var(--void-3);border:1px solid var(--ox-deep);border-radius:3px;padding:14px;cursor:pointer;text-align:center;transition:all 0.15s}
+.classify label:hover{border-color:var(--brass)}
+.classify input[type=radio]{display:none}
+.classify input[type=radio]:checked + .lbl{color:var(--gold)}
+.classify label:has(input:checked){border-color:var(--gold);background:rgba(212,168,83,0.08)}
+.classify .lbl{display:block;color:var(--cream)}
+.classify .lbl strong{display:block;font-family:'Libre Baskerville',serif;font-size:1rem;margin-bottom:4px;color:var(--brass)}
+.classify .lbl span{font-size:0.78rem;opacity:0.65;font-family:'IBM Plex Mono',monospace}
+.timer-box{background:var(--void-3);border:1px solid var(--amber);border-left:3px solid var(--amber);border-radius:3px;padding:14px;margin-bottom:12px;display:none}
+.timer-box.active{display:block}
+.timer-box h3{color:var(--amber);font-family:'Libre Baskerville',serif;font-size:1rem;margin-bottom:6px}
+.timer-box .time{font-family:'IBM Plex Mono',monospace;font-size:1.8rem;color:var(--gold);margin:6px 0}
+.timer-box .time.expired{color:var(--red)}
+.timer-box .hint{font-size:0.85rem;color:var(--cream);opacity:0.8}
+.checklist{display:flex;flex-direction:column;gap:8px}
+.checklist label{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--void-3);border:1px solid var(--ox-deep);border-radius:3px;cursor:pointer;font-size:0.95rem}
+.checklist label:hover{border-color:var(--brass)}
+.checklist input[type=checkbox]{margin-top:4px;accent-color:var(--gold)}
+.checklist label:has(input:checked){background:rgba(74,124,74,0.08);border-color:var(--ok);color:var(--cream)}
+.checklist label:has(input:checked) .desc{opacity:0.5}
+.checklist .lab{font-family:'Libre Baskerville',serif;color:var(--brass)}
+.checklist .desc{display:block;font-size:0.8rem;opacity:0.7;margin-top:3px;font-family:'IBM Plex Mono',monospace}
+.checkstate{margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;color:var(--brass)}
+.checkstate.ready{color:var(--ok)}
+.qa{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.qa .q{background:var(--void-3);border:1px solid var(--ox-deep);border-radius:3px;padding:12px 14px}
+.qa .q h4{font-family:'Libre Baskerville',serif;color:var(--brass);font-size:0.95rem;margin-bottom:8px}
+.qa .opts{display:flex;gap:8px;flex-wrap:wrap}
+.qa .opts button{padding:6px 14px;font-size:0.82rem;background:var(--void);color:var(--cream);border:1px solid var(--ox-deep)}
+.qa .opts button.sel{background:var(--ox);color:var(--gold);border-color:var(--gold)}
+.diag-result{margin-top:10px;padding:14px;background:var(--void-3);border-left:3px solid var(--gold);border-radius:3px;display:none}
+.diag-result.show{display:block}
+.diag-result h3{color:var(--gold);font-family:'Libre Baskerville',serif;font-size:1.05rem;margin-bottom:6px}
+.diag-result p{color:var(--cream);font-size:0.92rem;line-height:1.55}
+details{border:1px solid var(--ox-deep);border-radius:3px;margin-bottom:8px;background:var(--void-3)}
+details summary{padding:12px 14px;cursor:pointer;color:var(--brass);font-family:'Libre Baskerville',serif;font-size:1rem;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:'▸ ';color:var(--ox);margin-right:6px}
+details[open] summary::before{content:'▾ ';color:var(--gold)}
+details summary:hover{color:var(--gold)}
+details .body{padding:0 14px 14px;color:var(--cream);font-size:0.92rem;line-height:1.55}
+details .body strong{color:var(--brass)}
+details .body p{margin-bottom:8px}
+details .body ul{padding-left:18px;margin-bottom:8px}
+.rule{background:var(--void-3);border:1px solid var(--ox-deep);border-radius:3px;padding:14px;margin-bottom:10px;border-left:3px solid var(--brass)}
+.rule h3{font-family:'IBM Plex Mono',monospace;color:var(--gold);font-size:0.82rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+.rule p{color:var(--cream);font-size:0.94rem;line-height:1.55;margin:0}
+.lesson{background:var(--void-3);border:1px solid var(--ox-deep);border-radius:3px;padding:12px 14px;margin-bottom:8px;border-left:3px solid var(--ox)}
+.lesson h3{font-family:'Libre Baskerville',serif;color:var(--brass);font-size:0.98rem;margin-bottom:5px}
+.lesson p{color:var(--cream);font-size:0.88rem;line-height:1.5}
+.lesson .tag{display:inline-block;background:var(--void);color:var(--brass);padding:1px 7px;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;margin-left:6px}
+.log-entry{padding:10px 14px;border-bottom:1px solid var(--ox-deep);font-size:0.85rem}
+.log-entry:last-child{border-bottom:none}
+.log-entry .ts{color:var(--brass);font-family:'IBM Plex Mono',monospace;font-size:0.75rem}
+.log-entry .what{color:var(--cream);margin-top:3px;font-family:'Libre Baskerville',serif}
+.log-entry .meta{color:var(--cream);opacity:0.6;font-size:0.78rem;margin-top:3px;font-family:'IBM Plex Mono',monospace}
+.empty{color:var(--cream);opacity:0.5;font-style:italic;text-align:center;padding:18px;font-size:0.88rem}
+footer{margin-top:36px;padding:20px 0;text-align:center;color:var(--brass);font-size:0.82rem;font-family:'IBM Plex Mono',monospace;border-top:1px solid var(--ox-deep)}
+.glyph-seal{color:var(--gold);font-size:1.2rem}
+@media(max-width:600px){
+  .container{padding:16px 12px 40px}
+  header h1{font-size:1.5rem}
+  section{padding:16px 14px}
+  button{padding:12px 16px;font-size:1rem}
+  .snippet{font-size:0.74rem;padding:10px}
+  .status-grid{grid-template-columns:1fr}
+  .classify{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="brand">
+    <span class="glyph">◊</span>
+    <h1>FallHarmony</h1>
+    <span class="tag">operational cockpit · ◊·κ=1 · prime 601</span>
+  </div>
+  <p class="sub">Env-first debug · session hygiene · 30-min time-box · pre-exit checklist · the 7 lessons. Keep the estate calm.</p>
+</header>
+
+<section>
+  <h2><span class="num">R0 ●</span> NOW · what's running</h2>
+  <p class="intro">Paste the output of the diagnostic snippet to see what's alive on your machine. Orphans flag amber/red. Baseline = your real Chrome + 1 set of MCP servers (no more, no less).</p>
+
+  <div class="snippet">
+<span style="color:var(--brass)">PowerShell · paste, run, paste the JSON output back:</span>
+@{
+  agentServers = @(Get-CimInstance Win32_Process -Filter "Name='node.exe'" | Where-Object {$_.CommandLine -match 'agent\.mjs'} | Select-Object @{N='pid';E={$_.ProcessId}}, @{N='cmd';E={$_.CommandLine}})
+  mcpServers   = @(Get-CimInstance Win32_Process -Filter "Name='node.exe'" | Where-Object {$_.CommandLine -match 'onlybrains-mcp|fallcore-mcp|claude'} | Select-Object @{N='pid';E={$_.ProcessId}}, @{N='cmd';E={$_.CommandLine}})
+  playwright   = @(Get-CimInstance Win32_Process -Filter "Name='chrome.exe'" | Where-Object {$_.ExecutablePath -match 'ms-playwright'} | Select-Object @{N='pid';E={$_.ProcessId}})
+  realChrome   = (Get-Process chrome -ErrorAction SilentlyContinue | Where-Object {$_.MainWindowTitle -ne ''} | Measure-Object).Count
+  port1618     = ((netstat -ano | Select-String ':1618.*LISTENING') | Measure-Object).Count
+  zombieDirs   = (Get-ChildItem "$env:LOCALAPPDATA\Temp\claude" -Directory -ErrorAction SilentlyContinue | Where-Object {$_.Name -like 'playwright_chromium*'} | Measure-Object).Count
+} | ConvertTo-Json -Depth 5 -Compress
+<button class="copy" onclick="copySnippet(this)">copy</button>
+  </div>
+
+  <textarea id="diagInput" placeholder="Paste the JSON output here…"></textarea>
+  <div class="row" style="margin-top:10px"><button onclick="parseDiag()">Analyse</button><button class="ghost" onclick="document.getElementById('diagInput').value='';document.getElementById('statusOut').innerHTML=''">Clear</button></div>
+
+  <div class="status-grid" id="statusOut" style="margin-top:16px"></div>
+</section>
+
+<section>
+  <h2><span class="num">R1 〜</span> CLASSIFY · before you start</h2>
+  <p class="intro">Every task is either a BUILD (bounded scope, clear deliverable) or an ENV (something worked yesterday, broke today). Different protocols. Pick one before you start.</p>
+  <div class="classify">
+    <label><input type="radio" name="task" value="build" onchange="onClassify('build')"><span class="lbl"><strong>BUILD</strong><span>bounded · clear deliverable</span></span></label>
+    <label><input type="radio" name="task" value="env" onchange="onClassify('env')"><span class="lbl"><strong>ENV</strong><span>worked yesterday · 30-min cap</span></span></label>
+    <label><input type="radio" name="task" value="cleanup" onchange="onClassify('cleanup')"><span class="lbl"><strong>CLEANUP</strong><span>name-before-kill discipline</span></span></label>
+    <label><input type="radio" name="task" value="audit" onchange="onClassify('audit')"><span class="lbl"><strong>AUDIT</strong><span>read-only · no writes</span></span></label>
+  </div>
+  <div id="timerBox" class="timer-box">
+    <h3>ENV time-box · do NOT exceed</h3>
+    <div class="time mono" id="timeDisplay">30:00</div>
+    <div class="hint" id="timerHint">When this hits 0, switch to the manual path. Come back to the fix later. Don't bonfire the budget.</div>
+    <div class="row" style="margin-top:8px"><button class="small" onclick="stopTimer()">Stop timer · task done</button></div>
+  </div>
+  <div id="classifyHint" style="color:var(--cream);opacity:0.75;font-size:0.88rem;font-family:'IBM Plex Mono',monospace"></div>
+</section>
+
+<section>
+  <h2><span class="num">R5 ◐</span> ENV-FIRST DIAGNOSTIC · is the environment really the same?</h2>
+  <p class="intro">When something worked yesterday and breaks today, walk these three questions before patching code.</p>
+  <div class="qa" id="qaList"></div>
+  <div class="diag-result" id="diagResult"></div>
+</section>
+
+<section>
+  <h2><span class="num">R6 ◯</span> PRE-EXIT CHECKLIST</h2>
+  <p class="intro">Before closing Claude Code, tick these. Stops MCP leaks across sessions.</p>
+  <div class="checklist" id="exitChecklist"></div>
+  <div class="checkstate" id="exitState">0 / 5 ticked · keep going</div>
+</section>
+
+<section>
+  <h2><span class="num">Ω</span> OPERATIONAL PROTOCOL · the codified rules</h2>
+  <p class="intro">Five rules · the durable layer. Survives sessions. Every build / debug / cleanup reads these first.</p>
+  <div class="rule"><h3>OP1 · ENV-FIRST DEBUG</h3><p>When something worked yesterday and breaks today, verify the environment is the same BEFORE patching code. Three checks: (a) same processes running? (b) same MCP servers connected? (c) same files on disk? If yes, then patch. If no, restore environment first.</p></div>
+  <div class="rule"><h3>OP2 · NAME-BEFORE-KILL</h3><p>Before stopping any process, name what it provides. "node agent.mjs --server holds up: cockpit at :1618 + tool MCP for parent LLM." If you can't name it, ask. Don't kill.</p></div>
+  <div class="rule"><h3>OP3 · IMPROVISATION = STOP-THE-LINE</h3><p>If an agent (si-didy, sub-agent, etc.) starts inventing new file names instead of using the existing verb, that's the signal it lost context. Stop. Force the verb. Don't let it improvise harder.</p></div>
+  <div class="rule"><h3>OP4 · 30-MIN TIME-BOX ON ENV DEBUGGING</h3><p>Build problems are bounded. Environment debugging is unbounded. After 30 min, switch to the manual path (paste yourself · post yourself · ship via UI). Come back to the fix when the work is done.</p></div>
+  <div class="rule"><h3>OP5 · SESSION HYGIENE</h3><p>Always /exit Claude Code · never close the window. Once daily, scan Task Manager for orphan node.exe with MCP names in command line when no Claude Code is running.</p></div>
+</section>
+
+<section>
+  <h2><span class="num">R3 ♡</span> THE SEVEN LESSONS · from the 2026-06-02 forensic</h2>
+  <p class="intro">The lived debt behind the rules above. Read when you forget why the protocol exists.</p>
+  <div class="lesson"><h3>1 · Env-question comes BEFORE code-question <span class="tag">B5.2 trap</span></h3><p>Four hours patching the verb · all the while the load-bearing <code>agent.mjs --server</code> was dead. Yesterday's environment had it running. Today's didn't. Should have noticed in minute 5.</p></div>
+  <div class="lesson"><h3>2 · Cleanup that breaks working state <span class="tag">my-side</span></h3><p>I killed processes without naming what they provided. Killed the pipe. Then improvised harder. Three rounds of this.</p></div>
+  <div class="lesson"><h3>3 · Improvised scripts = lost context <span class="tag">si-didy</span></h3><p>When si-didy started writing <code>post-b5-2-linkedin.mjs</code>, <code>linkedin-post-b5-2.mjs</code> · that was the loss-of-context signal. Should have force-stopped and routed back to the existing verb.</p></div>
+  <div class="lesson"><h3>4 · Inline batching = unstoppable <span class="tag">UX</span></h3><p>I ran long polls inline (150s blocking loops). Simon sent stop messages I couldn't see until each bash finished. Bad UX. Background-fire all long ops · cap inline loops at 30s.</p></div>
+  <div class="lesson"><h3>5 · Build vs env are different beasts <span class="tag">classification</span></h3><p>FallFence: 7 min inline · live. B5.2: 4 hrs · still not posted. Builds are bounded. Env-debugging is unbounded · easy to chase symptoms forever. Time-box hard.</p></div>
+  <div class="lesson"><h3>6 · MCP server leak across sessions <span class="tag">hygiene</span></h3><p>Closing Claude Code without <code>/exit</code> leaves child MCP processes alive. Over days = sidebar clog. Use <code>/exit</code> always.</p></div>
+  <div class="lesson"><h3>7 · Brief like a colleague who walked in cold <span class="tag">briefing</span></h3><p>Build-agents refuse woo-coded briefs (rightly). Include a verified anchor: URL that returns 200, file path on disk, commit SHA. Saves a hallucination and a wasted turn.</p></div>
+</section>
+
+<section>
+  <h2><span class="num">R4 △</span> SESSION LOG · what you classified today</h2>
+  <p class="intro">Persistent across reloads (IndexedDB). Builds a record of build-vs-env-vs-cleanup ratios over time.</p>
+  <div id="logList"><div class="empty">No classified tasks yet · pick a classification above to log</div></div>
+  <div class="row" style="margin-top:10px"><button class="ghost small" onclick="clearLog()">Clear log</button></div>
+</section>
+
+<footer>
+  <p>◊·κ=1 · FallHarmony · prime 601 · sovereign single-file · MIT · runs offline</p>
+  <p style="margin-top:6px;opacity:0.7">part of the AI Native Solutions estate · <a href="https://sjgant80-hub.github.io/fallfind/">fallfind</a> · <a href="https://sjgant80-hub.github.io/fall-substrate/">fall-substrate</a> · <a href="https://sjgant80-hub.github.io/fallmind/">fallmind</a> · <a href="https://sjgant80-hub.github.io/fallfence/">fallfence</a></p>
+  <p style="margin-top:8px"><span class="glyph-seal">◊·κ=φ⁴</span></p>
+</footer>
+
+</div>
+
+<script>
+const PRIME = 601;
+const KONOMI = { tier:'sovereign', minted:null, mintPending:true, prime:PRIME };
+try { window.KONOMI_LICENCE = KONOMI; } catch(_){}
+
+let bc;
+try { bc = new BroadcastChannel('fall-signal'); } catch(_){}
+function emit(kind, payload){ try{ bc && bc.postMessage({source:'fallharmony', kind, payload, prime:PRIME, ts:new Date().toISOString()}); }catch(_){} }
+try { emit('fallharmony_online', { version:'1.0', prime:PRIME }); } catch(_){}
+
+// ─────────────────────────────────────────────────
+// COPY snippet to clipboard
+// ─────────────────────────────────────────────────
+function copySnippet(btn){
+  const txt = btn.parentElement.innerText.replace(/copy$/,'').trim();
+  navigator.clipboard.writeText(txt).then(()=>{
+    btn.textContent='copied';
+    setTimeout(()=>btn.textContent='copy', 1200);
+  }).catch(()=>prompt('Copy this:', txt));
+}
+
+// ─────────────────────────────────────────────────
+// DIAGNOSTIC parse (R0)
+// ─────────────────────────────────────────────────
+function parseDiag(){
+  const raw = document.getElementById('diagInput').value.trim();
+  if (!raw){ alert('paste the JSON output first'); return; }
+  let d;
+  try { d = JSON.parse(raw); } catch(e) { alert('not valid JSON: ' + e.message); return; }
+
+  const items = [];
+  // agent servers
+  const agentN = (d.agentServers || []).length;
+  items.push({ label:'agent.mjs --server', val: agentN === 0 ? 'none' : `${agentN} running`, status: agentN === 0 ? 'ok' : (agentN === 1 ? 'amber' : 'red'),
+    det: agentN === 0 ? 'expected · spawns chromium when verbs fire' : (agentN === 1 ? 'one running · check PowerShell profile for autostart' : `${agentN} running · only one is ever needed · others are orphans`) });
+  // MCP servers
+  const mcpN = (d.mcpServers || []).length;
+  const mcpSetsApprox = Math.round(mcpN / 4);
+  items.push({ label:'MCP processes', val: `${mcpN} (~${mcpSetsApprox} session${mcpSetsApprox === 1 ? '' : 's'})`, status: mcpSetsApprox <= 1 ? 'ok' : 'amber',
+    det: mcpSetsApprox <= 1 ? 'one set · clean' : `${mcpSetsApprox - 1} orphan set${mcpSetsApprox > 2 ? 's' : ''} · close extra Claude Code via /exit` });
+  // playwright chromium
+  const pwN = (d.playwright || []).length;
+  items.push({ label:'Playwright chromium', val: pwN === 0 ? 'none' : `${pwN} alive`, status: pwN === 0 ? 'ok' : 'amber',
+    det: pwN === 0 ? 'clean' : 'kill if not in active use · they leak profile locks' });
+  // real chrome
+  const rc = Number(d.realChrome || 0);
+  items.push({ label:'Your real Chrome', val: `${rc} window${rc === 1 ? '' : 's'}`, status:'ok', det:'untouched · this is just your browsing' });
+  // port 1618
+  const p1618 = Number(d.port1618 || 0);
+  items.push({ label:'Port :1618 (si-didy cockpit)', val: p1618 === 0 ? 'free' : 'in use', status: p1618 === 0 ? 'ok' : 'amber',
+    det: p1618 === 0 ? '--server not bound' : '--server is bound · cockpit reachable at localhost:1618' });
+  // zombie dirs
+  const zd = Number(d.zombieDirs || 0);
+  items.push({ label:'Zombie playwright temp dirs', val: zd === 0 ? 'none' : `${zd} on disk`, status: zd === 0 ? 'ok' : 'amber',
+    det: zd === 0 ? 'clean' : `delete from %LOCALAPPDATA%\\Temp\\claude\\ to free ~${zd*50}MB` });
+
+  document.getElementById('statusOut').innerHTML = items.map(it => `
+    <div class="status ${it.status}">
+      <h3>${it.label}</h3>
+      <div class="val">${it.val}</div>
+      <div class="det">${it.det}</div>
+    </div>`).join('');
+
+  // overall verdict
+  const red = items.filter(i => i.status === 'red').length;
+  const amber = items.filter(i => i.status === 'amber').length;
+  emit('fallharmony_diagnostic_run', { red, amber, ok: items.length - red - amber });
+  logEntry('diagnostic', `${red} red · ${amber} amber · ${items.length - red - amber} ok`, raw.slice(0,200));
+}
+
+// ─────────────────────────────────────────────────
+// CLASSIFY (R1)
+// ─────────────────────────────────────────────────
+let timerInterval = null;
+let timerEnd = null;
+const TIMER_DURATION = 30 * 60 * 1000;
+
+function onClassify(kind){
+  emit('fallharmony_task_classified', { kind });
+  const hints = {
+    build: 'BUILD · clean scope · single commit per logical step · ship in one go.',
+    env:   'ENV · 30-min timer started · if not fixed in 30, manual path. Come back later.',
+    cleanup:'CLEANUP · name what each process provides before killing. If unknown, ask.',
+    audit: 'AUDIT · read-only · no writes · ship a report and stop.'
+  };
+  document.getElementById('classifyHint').textContent = hints[kind] || '';
+  if (kind === 'env'){ startTimer(); } else { stopTimer(); }
+  const label = prompt('Short label for the log (e.g. "B5.2 LinkedIn drop")', '');
+  if (label) logEntry(kind, label, '');
+}
+
+function startTimer(){
+  stopTimer();
+  timerEnd = Date.now() + TIMER_DURATION;
+  document.getElementById('timerBox').classList.add('active');
+  tickTimer();
+  timerInterval = setInterval(tickTimer, 1000);
+}
+
+function stopTimer(){
+  if (timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+  timerEnd = null;
+  document.getElementById('timerBox').classList.remove('active');
+}
+
+function tickTimer(){
+  if (!timerEnd) return;
+  const remain = timerEnd - Date.now();
+  const display = document.getElementById('timeDisplay');
+  const hint = document.getElementById('timerHint');
+  if (remain <= 0){
+    display.textContent = '00:00';
+    display.classList.add('expired');
+    hint.textContent = 'TIME UP · switch to the manual path NOW. Continuing burns budget without progress.';
+    emit('fallharmony_env_timeout', { duration_ms: TIMER_DURATION });
+    clearInterval(timerInterval); timerInterval = null;
+    return;
+  }
+  const m = Math.floor(remain / 60000);
+  const s = Math.floor((remain % 60000) / 1000);
+  display.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  display.classList.remove('expired');
+}
+
+// ─────────────────────────────────────────────────
+// ENV diagnostic questions (R5)
+// ─────────────────────────────────────────────────
+const ENV_QS = [
+  { id:'procs', q:'Are the same processes running today as yesterday?', opts:['yes · same baseline','no · something changed','don\'t know · check NOW panel'] },
+  { id:'mcp',   q:'Are the same MCP servers connected (claude-in-chrome, computer-use, etc.)?', opts:['yes · all connected','no · one disconnected','don\'t know'] },
+  { id:'files', q:'Have any agent.mjs / verb / config files changed since the last green run?', opts:['no · same git HEAD','yes · I committed today','don\'t know'] },
+];
+let envAnswers = {};
+
+function renderQA(){
+  const html = ENV_QS.map(q => `
+    <div class="q">
+      <h4>${q.q}</h4>
+      <div class="opts">${q.opts.map(o => `<button onclick="answerQ('${q.id}',this,'${o.replace(/'/g,"\\'")}')">${o}</button>`).join('')}</div>
+    </div>`).join('');
+  document.getElementById('qaList').innerHTML = html;
+}
+
+function answerQ(qid, btn, val){
+  envAnswers[qid] = val;
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  // verdict
+  if (Object.keys(envAnswers).length === ENV_QS.length){
+    const r = document.getElementById('diagResult');
+    const sameProcs = envAnswers.procs?.startsWith('yes');
+    const sameMCP = envAnswers.mcp?.startsWith('yes');
+    const sameFiles = envAnswers.files?.startsWith('no');
+    let verdict, msg;
+    if (sameProcs && sameMCP && sameFiles){
+      verdict = 'Environment is the same · the regression is in the code · patch is correct path.';
+      msg = 'You\'ve verified env parity. Now patch the verb / file with confidence. Yesterday-worked + today-broken + same-env = a real regression in something you touched.';
+    } else {
+      verdict = 'Environment changed · restore env BEFORE patching code.';
+      msg = 'Something in the environment differs from when it worked. Patching code now will chase a symptom. Restore the env first: start the missing process, reconnect the MCP, revert the file change. Then test. If still broken, then patch.';
+    }
+    r.innerHTML = `<h3>${verdict}</h3><p>${msg}</p>`;
+    r.classList.add('show');
+    emit('fallharmony_env_diagnostic', { sameProcs, sameMCP, sameFiles });
+  }
+}
+
+// ─────────────────────────────────────────────────
+// PRE-EXIT checklist (R6)
+// ─────────────────────────────────────────────────
+const EXIT_ITEMS = [
+  { lab:'Used /exit', desc:'not just closed the window · /exit shuts MCPs cleanly' },
+  { lab:'No agent.mjs --server running', desc:'kill it via taskkill /F /PID <pid> if it\'s up' },
+  { lab:'No Playwright chromium', desc:'check ms-playwright process count' },
+  { lab:'No zombie temp dirs', desc:'rm -rf %LOCALAPPDATA%\\Temp\\claude\\playwright_chromium*' },
+  { lab:'Pushed any in-progress work', desc:'no uncommitted commits drifting locally' },
+];
+
+function renderExit(){
+  document.getElementById('exitChecklist').innerHTML = EXIT_ITEMS.map((it,i) => `
+    <label><input type="checkbox" onchange="updateExitState()" data-i="${i}"><div><div class="lab">${it.lab}</div><div class="desc">${it.desc}</div></div></label>`).join('');
+}
+
+function updateExitState(){
+  const boxes = document.querySelectorAll('#exitChecklist input[type=checkbox]');
+  const done = Array.from(boxes).filter(b => b.checked).length;
+  const total = boxes.length;
+  const el = document.getElementById('exitState');
+  el.textContent = done === total ? `✓ ${done}/${total} · ready to /exit` : `${done}/${total} ticked · keep going`;
+  el.classList.toggle('ready', done === total);
+  if (done === total) emit('fallharmony_ready_to_exit', { ticked: done });
+}
+
+// ─────────────────────────────────────────────────
+// SESSION LOG (IndexedDB)
+// ─────────────────────────────────────────────────
+const DB = 'fallharmony';
+let db;
+function openDb(){
+  return new Promise((res,rej) => {
+    const r = indexedDB.open(DB, 1);
+    r.onupgradeneeded = e => { const d = e.target.result; if (!d.objectStoreNames.contains('log')) d.createObjectStore('log', { keyPath:'id', autoIncrement:true }); };
+    r.onsuccess = e => { db = e.target.result; res(db); };
+    r.onerror = e => rej(e.target.error);
+  });
+}
+
+async function logEntry(kind, label, detail){
+  if (!db) await openDb();
+  const e = { ts:new Date().toISOString(), kind, label, detail };
+  const tx = db.transaction('log','readwrite');
+  tx.objectStore('log').add(e);
+  tx.oncomplete = renderLog;
+}
+
+async function renderLog(){
+  if (!db) await openDb();
+  const tx = db.transaction('log','readonly');
+  const r = tx.objectStore('log').getAll();
+  r.onsuccess = () => {
+    const all = r.result.slice().reverse().slice(0,30);
+    const el = document.getElementById('logList');
+    if (!all.length){ el.innerHTML = '<div class="empty">No classified tasks yet · pick a classification above to log</div>'; return; }
+    el.innerHTML = all.map(e => `
+      <div class="log-entry">
+        <div class="ts">${e.ts.replace('T',' ').slice(0,19)}</div>
+        <div class="what">${escapeHtml(e.kind.toUpperCase())} · ${escapeHtml(e.label)}</div>
+        ${e.detail ? `<div class="meta">${escapeHtml(e.detail.slice(0,140))}</div>` : ''}
+      </div>`).join('');
+  };
+}
+
+async function clearLog(){
+  if (!confirm('clear the session log?')) return;
+  if (!db) await openDb();
+  const tx = db.transaction('log','readwrite');
+  tx.objectStore('log').clear();
+  tx.oncomplete = renderLog;
+}
+
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// init
+renderQA();
+renderExit();
+openDb().then(renderLog).catch(()=>{});
+</script>
+</body>
+</html>

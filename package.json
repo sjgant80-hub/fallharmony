@@ -1,0 +1,15 @@
+{
+  "name": "fallharmony",
+  "version": "1.0.0",
+  "description": "Operational cockpit for the AI Native Solutions estate. Env-first debug, session hygiene, 30-min time-box, pre-exit checklist, the 7 lessons. Single-file. Prime 601.",
+  "type": "module",
+  "private": false,
+  "license": "MIT",
+  "author": "Simon Gant",
+  "homepage": "https://sjgant80-hub.github.io/fallharmony/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sjgant80-hub/fallharmony.git"
+  },
+  "keywords": ["sovereign", "operational", "cockpit", "estate", "diagnostic", "ai-native-solutions"]
+}
