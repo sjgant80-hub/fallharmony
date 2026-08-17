@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Operational cockpit for the AI Native Solutions estate. Env-first debug, session hygiene, 30-min time-box, pre-exit checklist, the 7 lessons. Single-file. Prime 601.",
   "type": "module",
+  "scripts": {
+    "test": "node test.mjs"
+  },
   "private": false,
   "license": "MIT",
   "author": "Simon Gant",
